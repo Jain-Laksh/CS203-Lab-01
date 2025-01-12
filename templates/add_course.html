@@ -1,0 +1,53 @@
+{% extends "base.html" %} {% block content %}
+<h2>Add New Course</h2>
+<form method="POST" action="{{ url_for('add_course') }}">
+  <div>
+    <label for="code" class="form-label">Code:</label>
+    <input type="text" class="form-control" id="name" name="code" />
+  </div>
+
+  <div>
+    <label for="name" class="form-label">Name:</label>
+    <input type="text" class="form-control" id="name" name="name" />
+  </div>
+
+  <div>
+    <label for="instructor" class="form-label">Instructor Name:</label>
+    <input type="text" class="form-control" id="name" name="instructor" />
+  </div>
+
+  <div>
+    <label for="semester" class="form-label">Semester:</label>
+    <input type="text" class="form-control" id="name" name="semester" />
+  </div>
+
+  <div>
+    <label for="schedule" class="form-label">Schedule:</label>
+    <input type="text" class="form-control" id="name" name="schedule" />
+  </div>
+
+  <div>
+    <label for="classroom" class="form-label">Classroom:</label>
+    <input type="text" class="form-control" id="name" name="classroom" />
+  </div>
+
+  <div>
+    <label for="prerequisites" class="form-label">Prerequisites:</label>
+    <input type="text" class="form-control" id="name" name="prerequisites" />
+  </div>
+
+  <div>
+    <label for="grading" class="form-label">Grading Policy:</label>
+    <input type="text" class="form-control" id="name" name="grading" />
+  </div>
+
+  <div>
+    <label for="description" class="form-label">Course Description:</label>
+    <input type="text" class="form-control" id="name" name="description" />
+  </div>
+
+  <br />
+
+  <div><button type="submit" class="btn btn-primary">Submit</button></div>
+</form>
+{% endblock %}
