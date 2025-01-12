@@ -28,29 +28,7 @@
         "semester": "every year",
         "schedule": "weekends midnight",
         "classroom": "G208",
-        "prerequisites": "18+",
-        "grading": "upon instructor descretion",
-        "description": "Surprise"
-    },
-    {
-        "code": "LJ203",
-        "name": "Introduction to Laksh",
-        "instructor": "Laksh Jain",
-        "semester": "every year",
-        "schedule": "weekends midnight",
-        "classroom": "G208",
-        "prerequisites": "18+",
-        "grading": "upon instructor descretion",
-        "description": "Surprise"
-    },
-    {
-        "code": "LJ203",
-        "name": "Introduction to Laksh",
-        "instructor": "Laksh Jain",
-        "semester": "every year",
-        "schedule": "weekends midnight",
-        "classroom": "G208",
-        "prerequisites": "18+",
+        "prerequisites": "dfj",
         "grading": "upon instructor descretion",
         "description": "Surprise"
     }

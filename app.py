@@ -66,8 +66,7 @@ def save_courses(data):
 def index():
     with tracer.start_as_current_span("index") as span:
         span.set_attribute("http.method", request.method)
-        span.set_attribute("http.url", request.url) 
-        span.set_attribute("http.route", request.url_rule)  
+        span.set_attribute("http.url", request.url)   
         span.set_attribute("http.host", request.host)
         span.set_attribute("user.ip", request.remote_addr)   
         logger.info("Home page accessed")
@@ -79,7 +78,6 @@ def course_catalog():
     with tracer.start_as_current_span("index") as span:
         span.set_attribute("http.method", request.method)
         span.set_attribute("http.url", request.url)
-        span.set_attribute("http.route", request.url_rule)
         span.set_attribute("http.host", request.host)
         span.set_attribute("user.ip", request.remote_addr)
         logger.info("Course catalog accessed")
@@ -95,13 +93,12 @@ def course_details(code):
         span.set_attribute("course.code", code)
         span.set_attribute("http.method", request.method)
         span.set_attribute("http.url", request.url)
-        span.set_attribute("http.route", request.url_rule)
         span.set_attribute("http.host", request.host)
         span.set_attribute("user.ip", request.remote_addr)
         logger.info(f"Course details accessed for course: {code}")
         if not course:
             span.set_attribute("error", f"No course found with code '{code}'")
-            logger.error(f"No course found with code '{code}'")
+            logger.warning(f"No course found with code '{code}'")
             flash(f"No course found with code '{code}'.", "error")
             return redirect(url_for('course_catalog'))
         span.set_attribute("course found", course['name'])
@@ -113,7 +110,6 @@ def add_course():
     with tracer.start_as_current_span("add_course") as span:
         span.set_attribute("http.method", request.method)
         span.set_attribute("http.url", request.url)
-        span.set_attribute("http.route", request.url_rule)
         span.set_attribute("http.host", request.host)
         span.set_attribute("user.ip", request.remote_addr)
         logger.info("Add course page accessed")
@@ -133,7 +129,7 @@ def add_course():
             for key, value in course.items():
                 if not value:
                     span.set_attribute("error", f"Please provide a value for '{key}'")
-                    logger.error(f"Please provide a value for '{key}'")
+                    logger.warning(f"Please provide a value for '{key}'")
                     flash(f"Please provide a value for '{key}'.", "error")
                     return redirect(url_for('add_course'))
                 
