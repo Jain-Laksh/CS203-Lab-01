@@ -31,5 +31,49 @@
         "prerequisites": "dfj",
         "grading": "upon instructor descretion",
         "description": "Surprise"
+    },
+    {
+        "code": "assa",
+        "name": "asas",
+        "instructor": "assa",
+        "semester": "assa",
+        "schedule": "asas",
+        "classroom": "assa",
+        "prerequisites": "assa",
+        "grading": "assasaas",
+        "description": "assa"
+    },
+    {
+        "code": "asaas",
+        "name": "ass",
+        "instructor": "asa",
+        "semester": "asaa",
+        "schedule": "asass",
+        "classroom": "saasassa",
+        "prerequisites": "sasasa",
+        "grading": "saassa",
+        "description": "sa"
+    },
+    {
+        "code": "sa",
+        "name": "as",
+        "instructor": "assa",
+        "semester": "asa",
+        "schedule": "asas",
+        "classroom": "assaass",
+        "prerequisites": "asasa",
+        "grading": "aasas",
+        "description": "assa"
+    },
+    {
+        "code": "adad",
+        "name": "wawa",
+        "instructor": "aww",
+        "semester": "awa",
+        "schedule": "awwawa",
+        "classroom": "wawa",
+        "prerequisites": "wawa",
+        "grading": "wawa",
+        "description": "wawa"
     }
 ]
