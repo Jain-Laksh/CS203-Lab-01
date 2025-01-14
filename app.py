@@ -20,7 +20,7 @@ COURSE_FILE = 'course_catalog.json'
 FlaskInstrumentor().instrument_app(app)
 
 # OpenTelemetry Setup- capturing traces
-resource = Resource.create({"service.name": "course-catalog-service"})
+resource = Resource.create({"service.name": "course-registration-app"})
 trace.set_tracer_provider(TracerProvider(resource=resource))
 tracer = trace.get_tracer(__name__)
 
@@ -112,12 +112,12 @@ def course_catalog():
     start_time = time.time()
     global course_catalog_route_counter
     course_catalog_route_counter += 1
-    with tracer.start_as_current_span("index") as span:
+    with tracer.start_as_current_span("catalog") as span:
         span.set_attribute("http.method", request.method)
         span.set_attribute("http.url", request.url)
         span.set_attribute("http.host", request.host)
         span.set_attribute("user.ip", request.remote_addr)
-        span.set_attribute("Metrics: index_route_counter", course_catalog_route_counter)
+        span.set_attribute("Metrics: course_catalog_route_counter", course_catalog_route_counter)
         logger.info("Course catalog accessed")
         courses = load_courses()
         span.set_attribute("processing time", calculate_time_taken(start_time))
