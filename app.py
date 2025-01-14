@@ -9,6 +9,7 @@ from opentelemetry.sdk.resources import Resource
 from opentelemetry.exporter.jaeger.thrift import JaegerExporter
 from opentelemetry.sdk.trace.export import BatchSpanProcessor, ConsoleSpanExporter
 import logging
+import time
 
 # Flask App Initialization
 app = Flask(__name__)
@@ -49,36 +50,50 @@ trace.get_tracer_provider().add_span_processor(span_processor)
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',)
 logger = logging.getLogger(__name__)
 
+def calculate_time_taken(start_time):
+    finish_time = time.time()
+    time_taken = finish_time - start_time
+    return time_taken
+
+
 # Utility Functions
 def load_courses():
     """Load courses from the JSON file."""
+    start_time = time.time()
     with tracer.start_as_current_span("load_courses") as span:
         span.set_attribute("file.path", COURSE_FILE)
         span.set_attribute("file.exists", os.path.exists(COURSE_FILE))
         logger.info("Loading courses from file")
         if not os.path.exists(COURSE_FILE):
             logger.warning("Course file not found, returning empty list")
+            span.set_attribute("error", "Course file not found")
+            span.set_attribute("processing time", calculate_time_taken(start_time))
             return []  # Return an empty list if the file doesn't exist
         with open(COURSE_FILE, 'r') as file:
             courses = json.load(file)
             logger.info(f"Courses loaded successfully! Total number of courses: {len(courses)}")
             span.set_attribute("courses.count", len(courses))
+            span.set_attribute("processing time", calculate_time_taken(start_time))
             return courses
 
 
 def save_courses(data):
     """Save new course data to the JSON file."""
+    start_time = time.time()    
     with tracer.start_as_current_span("save_courses") as span:
         courses = load_courses()  # Load existing courses
         courses.append(data)  # Append the new course
         with open(COURSE_FILE, 'w') as file:
             json.dump(courses, file, indent=4)
             logger.info(f"Saved course: {data['name']} to file")
+            span.set_attribute("New course", data)
+        span.set_attribute("processing time", calculate_time_taken(start_time))
 
 
 # Routes
 @app.route('/')
 def index():
+    start_time = time.time()    
     global index_route_counter
     index_route_counter += 1
     with tracer.start_as_current_span("index") as span:
@@ -88,11 +103,13 @@ def index():
         span.set_attribute("user.ip", request.remote_addr)   
         span.set_attribute("Metrics: index_route_counter", index_route_counter)
         logger.info("Home page accessed")
+        span.set_attribute("processing time", calculate_time_taken(start_time))
 
     return render_template('index.html')
 
 @app.route('/catalog')
 def course_catalog():
+    start_time = time.time()
     global course_catalog_route_counter
     course_catalog_route_counter += 1
     with tracer.start_as_current_span("index") as span:
@@ -103,11 +120,14 @@ def course_catalog():
         span.set_attribute("Metrics: index_route_counter", course_catalog_route_counter)
         logger.info("Course catalog accessed")
         courses = load_courses()
+        span.set_attribute("processing time", calculate_time_taken(start_time))
+
         return render_template('course_catalog.html', courses=courses)
 
 
 @app.route('/course/<code>')
 def course_details(code):
+    start_time = time.time()
     global course_details_route_counter
     course_details_route_counter += 1
     courses = load_courses()
@@ -127,13 +147,16 @@ def course_details(code):
             span.set_attribute("Metrics: Error course not found", error_course_not_found_counter)
             logger.warning(f"No course found with code '{code}'")
             flash(f"No course found with code '{code}'.", "error")
+            span.set_attribute("processing time", calculate_time_taken(start_time))
             return redirect(url_for('course_catalog'))
         span.set_attribute("course found", course['name'])
         logger.info(f"Course found: {course['name']}")
+        span.set_attribute("processing time", calculate_time_taken(start_time))
         return render_template('course_details.html', course=course)
 
 @app.route('/add-course', methods=['GET', 'POST'])
 def add_course():
+    start_time = time.time()
     global add_course_route_counter
     add_course_route_counter += 1
     with tracer.start_as_current_span("add_course") as span:
@@ -164,6 +187,7 @@ def add_course():
                     span.set_attribute("Metrics: Error course add form", error_course_add_form)
                     logger.warning(f"Please provide a value for '{key}'")
                     flash(f"Please provide a value for '{key}'.", "error")
+                    span.set_attribute("processing time", calculate_time_taken(start_time))
                     return redirect(url_for('add_course'))
                 
             span.set_attribute("Form submitted", json.dumps(course))
@@ -171,6 +195,7 @@ def add_course():
             save_courses(course)
             logger.info(f"Course '{course['name']}' added successfully.")
             flash(f"Course '{course['name']}' added successfully.", "success")
+            span.set_attribute("processing time", calculate_time_taken(start_time))
             return redirect(url_for('course_catalog'))
         return render_template('add_course.html')
 
